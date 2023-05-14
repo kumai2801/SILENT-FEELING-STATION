@@ -1,0 +1,6 @@
+git clone: kéo toàn bộ project xuống
+git add . : add tất cả  mọi thứ
+git commit -am "message gửi lên" 
+
+git push : đẩy code lên
+git pull : update code mới nhất
