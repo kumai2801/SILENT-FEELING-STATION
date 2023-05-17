@@ -1,4 +1,4 @@
-package ui;
+package tmpl.ui;
 
 public class Dashboard {
 
