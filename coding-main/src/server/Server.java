@@ -3,33 +3,50 @@ package server;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server {
-	private int               port;
-    private ServerSocket      serverSocket;
+import client.ClientThreadChat;
 
-    public Server(int port) throws Exception{
-        this.port         = port;
-        this.serverSocket = new ServerSocket(port);
+public class Server {
+    private ServerSocket serverSocket;
+
+
+    public Server(int port) throws Exception {
+        serverSocket = new ServerSocket(port);
         System.out.println("Server runs on port " + port);
     }
 
-    public void StartServer() {
+
+    public void startServer() {
         try {
             while (!serverSocket.isClosed()) {
-                Socket socket = serverSocket.accept();
-                System.out.println("connected to socket: " + socket.getRemoteSocketAddress());
+            	Socket socket = serverSocket.accept();
+            	connectClientChat(socket);
+            }
+        } catch (Exception e) {
+            closeServer();;
+        }
+    }
+    
+    public void connectClientChat(Socket socket) {
+        ClientThreadChat clientThreadChat = new ClientThreadChat(socket);
+        System.out.println(clientThreadChat.getNickName() + " has connected!!!");
+        clientThreadChat.start(); 
+    }
 
-                ServerThread serverThread = new ServerThread(socket);
-                serverThread.start();
+
+    public void closeServer() {
+        try {
+            if (serverSocket != null) {
+                serverSocket.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) throws Exception{
-        int    port   = 7777;
-        Server server = new Server(port);
-        server.StartServer();
+
+    public static void main(String[] args) throws Exception {
+        Server server = new Server(2801);
+        server.startServer();
     }
+
 }
